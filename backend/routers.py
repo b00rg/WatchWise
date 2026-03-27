@@ -52,14 +52,16 @@ async def score_url_stream(req: VideoRequest):
     Score a single YouTube video with streaming SSE output.
     The frontend receives agent events in real-time as each specialist analyses the content.
 
-    Event types: agent_start | token | tool_call | agent_done | final
+    Event types: pipeline_start | meta | agent_start | token | tool_call | agent_done | final | error
     """
-    try:
-        data = await asyncio.to_thread(run_pipeline, req.url)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
     async def generate():
+        yield f"data: {json.dumps({'type': 'pipeline_start'})}\n\n"
+        try:
+            data = await asyncio.to_thread(run_pipeline, req.url)
+        except Exception as e:
+            yield f"data: {json.dumps({'type': 'error', 'detail': str(e)})}\n\n"
+            return
+
         yield f"data: {json.dumps({'type': 'meta', 'data': _meta(data)})}\n\n"
         async for event in score_video_stream(
             transcript=data.get("transcript", ""),
