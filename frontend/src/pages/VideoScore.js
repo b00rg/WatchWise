@@ -173,9 +173,9 @@ async function readSSEStream(res, onEvent) {
 /* ── Page ────────────────────────────────────────────── */
 const PRESET_VIDEOS = [
   { title: "Cocomelon - Wheels on the Bus", url: "https://www.youtube.com/watch?v=e_04ZrNroTo", thumb: "https://img.youtube.com/vi/e_04ZrNroTo/0.jpg" },
-  { title: "Ms Rachel - Baby Learning", url: "https://www.youtube.com/watch?v=HqgP0e557rA", thumb: "https://img.youtube.com/vi/HqgP0e557rA/0.jpg" },
+  { title: "Ms Rachel - Baby Learning", url: "https://www.youtube.com/watch?v=hTqtGJwsJVE", thumb: "https://img.youtube.com/vi/hTqtGJwsJVE/0.jpg" },
   { title: "MrBeast - Extreme Challenge", url: "https://www.youtube.com/watch?v=0e3GPea1Tyg", thumb: "https://img.youtube.com/vi/0e3GPea1Tyg/0.jpg" },
-  { title: "Blippi - Learn Colors", url: "https://www.youtube.com/watch?v=E-uQo1v5oX0", thumb: "https://img.youtube.com/vi/E-uQo1v5oX0/0.jpg" }
+  { title: "Blippi - Learn Colors", url: "https://www.youtube.com/watch?v=HJLNtge8jv4", thumb: "https://img.youtube.com/vi/HJLNtge8jv4/0.jpg" }
 ];
 
 export default function VideoScore() {

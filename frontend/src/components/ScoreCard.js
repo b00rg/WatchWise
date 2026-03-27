@@ -39,7 +39,19 @@ export function ScoreCard({ result }) {
     <div className="card">
       {meta?.thumbnail && (
         <div className="meta-row">
-          <img src={meta.thumbnail} alt="thumb" />
+          <img 
+            src={meta.thumbnail} 
+            alt="thumb" 
+            onError={(e) => {
+              if (!e.target.dataset.fallback) {
+                e.target.dataset.fallback = "1";
+                e.target.src = e.target.src.replace('maxresdefault', 'hqdefault');
+              } else if (e.target.dataset.fallback === "1") {
+                e.target.dataset.fallback = "2";
+                e.target.src = e.target.src.replace('.webp', '.jpg');
+              }
+            }}
+          />
           <div>
             <div className="meta-title">{meta.title}</div>
             <div className="meta-channel">{meta.channel}</div>
