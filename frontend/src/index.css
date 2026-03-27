@@ -290,3 +290,5 @@ button:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
 }
 
 .judge-error-text { font-size: 0.72rem; color: #e05050; font-weight: 800; }
+.card-hover:hover { transform: translateY(-4px); box-shadow: 0 8px 16px rgba(100,70,200,0.1) !important; }
+.preset-carousel::-webkit-scrollbar { height: 8px; } .preset-carousel::-webkit-scrollbar-track { background: #f0eeff; border-radius: 4px; } .preset-carousel::-webkit-scrollbar-thumb { background: #b8b0db; border-radius: 4px; }

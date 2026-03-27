@@ -10,30 +10,35 @@ const JUDGES = [
     name: "Pacing",      title: "Rhythm Judge",
     color: "#ff8c69",
     blob: "42% 58% 54% 46% / 56% 44% 58% 44%",
+    intro: "I monitor how fast the cuts are to protect young attention spans.",
   },
   {
     key: "sensory",      agentId: "sensory_overload",    endpoint: "/agents/sensory/stream",
     name: "Sensory",     title: "Stimulation Judge",
     color: "#5bbde4",
     blob: "52% 48% 44% 56% / 62% 38% 56% 44%",
+    intro: "I watch out for loud noises, bright colors, and overstimulation.",
   },
   {
     key: "educational",  agentId: "educational_deficit", endpoint: "/agents/educational/stream",
     name: "Learning",    title: "Education Judge",
     color: "#6dd49a",
     blob: "56% 44% 46% 54% / 44% 58% 42% 58%",
+    intro: "I look for real learning value instead of empty entertainment.",
   },
   {
     key: "manipulation", agentId: "manipulation",        endpoint: "/agents/manipulation/stream",
     name: "Influence",   title: "Manipulation Judge",
     color: "#ffc947",
     blob: "44% 56% 62% 38% / 54% 46% 46% 54%",
+    intro: "I catch sneaky tactics like fake scarcity and product pushing.",
   },
   {
     key: "dopamine",     agentId: "dopamine_cycling",    endpoint: "/agents/dopamine/stream",
     name: "Dopamine",    title: "Reward Judge",
     color: "#c3a8e8",
     blob: "62% 38% 48% 52% / 48% 62% 52% 48%",
+    intro: "I evaluate the highs and lows of the video's reward loops.",
   },
 ];
 
@@ -43,6 +48,7 @@ const FINAL_JUDGE = {
   title: "Senior Child Media Health Reviewer",
   color: "#e8748a",
   blob: "50% 50% 50% 50% / 50% 50% 50% 50%",
+  intro: "I'll review everyone's notes to give you the final verdict.",
 };
 
 const IDLE_STATE    = { status: "idle",    thoughts: "", score: null };
@@ -154,15 +160,22 @@ async function readSSEStream(res, onEvent) {
 }
 
 /* ── Page ────────────────────────────────────────────── */
+const PRESET_VIDEOS = [
+  { title: "Cocomelon - Wheels on the Bus", url: "https://www.youtube.com/watch?v=e_04ZrNroTo", thumb: "https://img.youtube.com/vi/e_04ZrNroTo/mqdefault.jpg" },
+  { title: "Ms Rachel - Baby Learning", url: "https://www.youtube.com/watch?v=HqgP0e557rA", thumb: "https://img.youtube.com/vi/HqgP0e557rA/mqdefault.jpg" },
+  { title: "MrBeast - Extreme Challenge", url: "https://www.youtube.com/watch?v=0e3GPea1Tyg", thumb: "https://img.youtube.com/vi/0e3GPea1Tyg/mqdefault.jpg" },
+  { title: "Blippi - Learn Colors", url: "https://www.youtube.com/watch?v=E-uQo1v5oX0", thumb: "https://img.youtube.com/vi/E-uQo1v5oX0/mqdefault.jpg" }
+];
+
 export default function VideoScore() {
   const [url, setUrl]         = useState("");
   const [age, setAge]         = useState(8);
   const [result, setResult]   = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError]     = useState("");
-  const [showPanel, setShowPanel] = useState(false);
+  const [showPanel, setShowPanel] = useState(true);
   const [judgeStates, setJudgeStates] = useState(
-    Object.fromEntries([...JUDGES, FINAL_JUDGE].map(j => [j.key, IDLE_STATE]))
+    Object.fromEntries([...JUDGES, FINAL_JUDGE].map(j => [j.key, { ...IDLE_STATE, thoughts: j.intro }]))
   );
 
   function patchJudge(key, patch) {
@@ -233,14 +246,13 @@ export default function VideoScore() {
     }
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+  async function runPipelineForUrl(targetUrl) {
     setError(""); setResult(null); setLoading(true);
     setShowPanel(true);
     setJudgeStates(Object.fromEntries([...JUDGES, FINAL_JUDGE].map(j => [j.key, WAITING_STATE])));
 
     try {
-      const { data: pipeline } = await axios.post(`${API}/pipeline`, { url, age: Number(age) });
+      const { data: pipeline } = await axios.post(`${API}/pipeline`, { url: targetUrl, age: Number(age) });
 
       const agentPayload = {
         signals:    pipeline.signals,
@@ -267,8 +279,19 @@ export default function VideoScore() {
     }
   }
 
+  async function handleSubmit(e) {
+    e.preventDefault();
+    await runPipelineForUrl(url);
+  }
+
+  function handlePresetClick(presetUrl) {
+    setUrl(presetUrl);
+    runPipelineForUrl(presetUrl);
+  }
+
   const specialists = JUDGES.map(j => judgeStates[j.key]);
   const allSpecialistsDone = specialists.every(s => s.status === "done" || s.status === "error");
+  const isIdle = [...JUDGES, FINAL_JUDGE].every(j => judgeStates[j.key].status === "idle");
   const isWaiting = [...JUDGES, FINAL_JUDGE].every(j => judgeStates[j.key].status === "waiting");
   const allDone = judgeStates[FINAL_JUDGE.key].status === "done" || judgeStates[FINAL_JUDGE.key].status === "error";
 
@@ -313,6 +336,26 @@ export default function VideoScore() {
         {error && <div className="error">{error}</div>}
       </div>
 
+      <div style={{ marginBottom: "2.5rem" }}>
+        <p style={{ textAlign: "center", color: "#8b9eed", fontWeight: 800, fontSize: "0.85rem", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "1.5rem" }}>
+          Or try an example video
+        </p>
+        <div className="preset-carousel" style={{ display: "flex", gap: "1rem", overflowX: "auto", paddingBottom: "1rem" }}>
+          {PRESET_VIDEOS.map((v, i) => (
+             <div key={i} onClick={() => handlePresetClick(v.url)} style={{ cursor: "pointer", flex: "0 0 auto", width: "200px", borderRadius: "16px", overflow: "hidden", border: "2px solid #e8e2ff", background: "#fff", transition: "transform 0.15s, box-shadow 0.15s", boxShadow: "0 4px 12px rgba(100,70,200,0.05)" }} className="card-hover">
+               <div style={{ background: "#f0eeff", backgroundImage: `url(${v.thumb})`, backgroundSize: "cover", backgroundPosition: "center", height: "112px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                 <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "rgba(98, 72, 212, 0.9)", display: "flex", alignItems: "center", justifyContent: "center", color: "white", paddingLeft: "4px", backdropFilter: "blur(4px)" }}>
+                   ▶
+                 </div>
+               </div>
+               <div style={{ padding: "0.8rem", fontSize: "0.85rem", fontWeight: "800", color: "#3d3560", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                 {v.title}
+               </div>
+             </div>
+          ))}
+        </div>
+      </div>
+
       {showPanel && (
         <div className="panel-of-judges">
           <div className="panel-header">
@@ -322,7 +365,9 @@ export default function VideoScore() {
               <span className="panel-title-stars">★</span>
             </div>
             <div className="panel-subtitle">
-              {isWaiting
+              {isIdle
+                ? "Ready to review your video"
+                : isWaiting
                 ? "Extracting video data…"
                 : loading && !allDone
                 ? "Deliberating…"
@@ -336,8 +381,8 @@ export default function VideoScore() {
             ))}
           </div>
 
-          {/* Final judge appears once specialists are done */}
-          {allSpecialistsDone && (
+          {/* Final judge appears once specialists are done, or initially in idle */}
+          {(isIdle || allSpecialistsDone) && (
             <div style={{ marginTop: "1.5rem" }}>
               <div className="panel-subtitle" style={{ marginBottom: "1rem" }}>Final Verdict</div>
               <div style={{ display: "flex", justifyContent: "center" }}>
