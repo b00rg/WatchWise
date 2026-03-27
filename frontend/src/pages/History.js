@@ -37,7 +37,7 @@ export default function History() {
     <>
       <div className="card">
         <div className="section-title">Upload YouTube Watch History</div>
-        <p style={{ fontSize: "0.85rem", color: "#9090b0", marginBottom: "1rem" }}>
+        <p style={{ fontSize: "0.85rem", color: "#a098cc", marginBottom: "1rem", fontWeight: 600 }}>
           Export from Google Takeout → YouTube → watch-history.json
         </p>
         <div className="row">
@@ -53,11 +53,11 @@ export default function History() {
         <>
           <div className="card">
             <div className="section-title">Overview</div>
-            <div style={{ fontSize: "2.5rem", fontWeight: 800, color: "#c084fc" }}>
+            <div style={{ fontSize: "2.5rem", fontWeight: 900, color: "#6248d4" }}>
               {result.average_brainrot_score}
-              <span style={{ fontSize: "1rem", color: "#9090b0", marginLeft: "0.5rem" }}>avg BrainRot score</span>
+              <span style={{ fontSize: "1rem", color: "#a098cc", marginLeft: "0.5rem", fontWeight: 700 }}>avg BrainRot score</span>
             </div>
-            <div style={{ fontSize: "0.85rem", color: "#9090b0", marginTop: "0.25rem" }}>
+            <div style={{ fontSize: "0.85rem", color: "#a098cc", marginTop: "0.25rem", fontWeight: 600 }}>
               Based on {result.total_scored} videos
             </div>
           </div>
@@ -66,14 +66,14 @@ export default function History() {
             <div className="section-title">Score Over Time</div>
             <ResponsiveContainer width="100%" height={200}>
               <LineChart data={chartData}>
-                <CartesianGrid stroke="#2a2a3a" />
-                <XAxis dataKey="i" tick={{ fill: "#6060a0", fontSize: 11 }} />
-                <YAxis domain={[0, 100]} tick={{ fill: "#6060a0", fontSize: 11 }} />
+                <CartesianGrid stroke="#ede9ff" />
+                <XAxis dataKey="i" tick={{ fill: "#a098cc", fontSize: 11, fontWeight: 700 }} />
+                <YAxis domain={[0, 100]} tick={{ fill: "#a098cc", fontSize: 11, fontWeight: 700 }} />
                 <Tooltip
-                  contentStyle={{ background: "#18181f", border: "1px solid #2a2a3a", fontSize: "0.8rem" }}
+                  contentStyle={{ background: "#fff", border: "2px solid #e8e2ff", borderRadius: 12, fontSize: "0.8rem", fontWeight: 700 }}
                   formatter={(v, _, p) => [v, p.payload.title]}
                 />
-                <Line type="monotone" dataKey="score" stroke="#c084fc" dot={false} strokeWidth={2} />
+                <Line type="monotone" dataKey="score" stroke="#6248d4" dot={false} strokeWidth={2.5} />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -88,7 +88,7 @@ export default function History() {
                 {Object.entries(result.creator_scores).map(([ch, score]) => (
                   <tr key={ch}>
                     <td>{ch}</td>
-                    <td style={{ color: score > 65 ? "#f87171" : score > 40 ? "#fbbf24" : "#34d399" }}>
+                    <td style={{ color: score > 65 ? "#d83030" : score > 40 ? "#c98a00" : "#1fa870", fontWeight: 800 }}>
                       {score}
                     </td>
                   </tr>
