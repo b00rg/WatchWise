@@ -11,6 +11,7 @@ const JUDGES = [
     color: "#ff8c69",
     blob: "42% 58% 54% 46% / 56% 44% 58% 44%",
     intro: "I monitor how fast the cuts are to protect young attention spans.",
+    highIsBad: true,
   },
   {
     key: "sensory",      agentId: "sensory_overload",    endpoint: "/agents/sensory/stream",
@@ -18,6 +19,7 @@ const JUDGES = [
     color: "#5bbde4",
     blob: "52% 48% 44% 56% / 62% 38% 56% 44%",
     intro: "I watch out for loud noises, bright colors, and overstimulation.",
+    highIsBad: true,
   },
   {
     key: "educational",  agentId: "educational_deficit", endpoint: "/agents/educational/stream",
@@ -25,6 +27,7 @@ const JUDGES = [
     color: "#6dd49a",
     blob: "56% 44% 46% 54% / 44% 58% 42% 58%",
     intro: "I look for real learning value instead of empty entertainment.",
+    highIsGood: true,
   },
   {
     key: "manipulation", agentId: "manipulation",        endpoint: "/agents/manipulation/stream",
@@ -32,6 +35,7 @@ const JUDGES = [
     color: "#ffc947",
     blob: "44% 56% 62% 38% / 54% 46% 46% 54%",
     intro: "I catch sneaky tactics like fake scarcity and product pushing.",
+    highIsBad: true,
   },
   {
     key: "dopamine",     agentId: "dopamine_cycling",    endpoint: "/agents/dopamine/stream",
@@ -39,6 +43,7 @@ const JUDGES = [
     color: "#c3a8e8",
     blob: "62% 38% 48% 52% / 48% 62% 52% 48%",
     intro: "I evaluate the highs and lows of the video's reward loops.",
+    highIsBad: true,
   },
 ];
 
@@ -49,13 +54,14 @@ const FINAL_JUDGE = {
   color: "#e8748a",
   blob: "50% 50% 50% 50% / 50% 50% 50% 50%",
   intro: "I'll review everyone's notes to give you the final verdict.",
+  highIsBad: true,
 };
 
 const IDLE_STATE    = { status: "idle",    thoughts: "", score: null };
 const WAITING_STATE = { status: "waiting", thoughts: "", score: null };
 
 /* ── Blob face SVG ───────────────────────────────────── */
-function BlobFace({ status, score }) {
+function BlobFace({ status, score, judge }) {
   if (status === "waiting" || status === "idle" || status === "thinking") return (
     <svg viewBox="0 0 80 80" style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}>
       <line x1="24" y1="37" x2="34" y2="37" stroke="white" strokeWidth="3.5" strokeLinecap="round" opacity="0.9" />
@@ -65,7 +71,11 @@ function BlobFace({ status, score }) {
   );
 
   if (status === "done") {
-    if (score !== null && score < 50) {
+    // Determine whether the score is considered "good"
+    const isGood = judge?.highIsGood ? score >= 50 : score < 50;
+
+    if (!isGood) {
+      // SAD FACE
       return (
         <svg viewBox="0 0 80 80" style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}>
           <path d="M21 38 Q28 35 35 38" stroke="white" strokeWidth="3.5" fill="none" strokeLinecap="round" opacity="0.95" />
@@ -74,6 +84,7 @@ function BlobFace({ status, score }) {
         </svg>
       );
     }
+    // HAPPY FACE
     return (
       <svg viewBox="0 0 80 80" style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}>
         <path d="M21 38 Q28 29 35 38" stroke="white" strokeWidth="3.5" fill="none" strokeLinecap="round" opacity="0.95" />
@@ -117,7 +128,7 @@ function JudgeCard({ judge, state }) {
           className={`judge-blob anim-${status}`}
           style={{ background: judge.color, borderRadius: judge.blob }}
         >
-          <BlobFace status={status} score={score} />
+          <BlobFace status={status} score={score} judge={judge} />
         </div>
       </div>
 
