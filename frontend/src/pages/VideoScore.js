@@ -50,23 +50,11 @@ const WAITING_STATE = { status: "waiting", thoughts: "", score: null };
 
 /* ── Blob face SVG ───────────────────────────────────── */
 function BlobFace({ status }) {
-  if (status === "waiting") return (
+  if (status === "waiting" || status === "idle" || status === "thinking") return (
     <svg viewBox="0 0 80 80" style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}>
       <line x1="24" y1="37" x2="34" y2="37" stroke="white" strokeWidth="3.5" strokeLinecap="round" opacity="0.9" />
       <line x1="46" y1="37" x2="56" y2="37" stroke="white" strokeWidth="3.5" strokeLinecap="round" opacity="0.9" />
       <path d="M33 50 Q40 53 47 50" stroke="white" strokeWidth="2.5" fill="none" strokeLinecap="round" opacity="0.75" />
-    </svg>
-  );
-
-  if (status === "thinking") return (
-    <svg viewBox="0 0 80 80" style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}>
-      <circle cx="28" cy="35" r="7.5" fill="white" opacity="0.95" />
-      <circle cx="52" cy="35" r="7.5" fill="white" opacity="0.95" />
-      <circle cx="30" cy="36" r="3.5" fill="#3d3560" />
-      <circle cx="54" cy="36" r="3.5" fill="#3d3560" />
-      <circle cx="31.5" cy="34" r="1.2" fill="white" />
-      <circle cx="55.5" cy="34" r="1.2" fill="white" />
-      <ellipse cx="40" cy="53" rx="5" ry="4" fill="white" opacity="0.75" />
     </svg>
   );
 
@@ -114,13 +102,6 @@ function JudgeCard({ judge, state }) {
         >
           <BlobFace status={status} />
         </div>
-        {status === "thinking" && (
-          <div className="think-dots">
-            <div className="think-dot" />
-            <div className="think-dot" />
-            <div className="think-dot" />
-          </div>
-        )}
       </div>
 
       <div className="judge-name">{judge.name}</div>
@@ -207,8 +188,11 @@ export default function VideoScore() {
       if (!res.ok) { patchJudge(judge.key, { status: "error" }); return { agentId: judge.agentId, score: null }; }
 
       await readSSEStream(res, (obj) => {
-        const text = obj.text ?? "";
-        if (text) appendThought(judge.key, text);
+        let text = obj.text ?? "";
+        if (text) {
+          text = text.replace(/[\*#`~]/g, "");
+          appendThought(judge.key, text);
+        }
         if (obj.score !== undefined) finalScore = obj.score;
       });
 
@@ -232,8 +216,11 @@ export default function VideoScore() {
 
       let finalScore = null;
       await readSSEStream(res, (obj) => {
-        const text = obj.text ?? "";
-        if (text) appendThought(FINAL_JUDGE.key, text);
+        let text = obj.text ?? "";
+        if (text) {
+          text = text.replace(/[\*#`~]/g, "");
+          appendThought(FINAL_JUDGE.key, text);
+        }
         if (obj.score !== undefined) finalScore = obj.score;
         if (obj.type === "final") {
           setResult({ ...obj, meta });
