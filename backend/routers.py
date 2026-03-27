@@ -10,6 +10,7 @@ from pipeline.video import run_pipeline
 from multiagent_flow.scoring import score_video, score_video_stream
 
 router = APIRouter()
+_pipeline_cache: dict[str, dict] = {}  # url → pipeline data, lives for the server session
 
 
 # ── Request schemas ────────────────────────────────────────────────────────────
@@ -57,7 +58,11 @@ async def score_url_stream(req: VideoRequest):
     async def generate():
         yield f"data: {json.dumps({'type': 'pipeline_start'})}\n\n"
         try:
-            data = await asyncio.to_thread(run_pipeline, req.url)
+            if req.url in _pipeline_cache:
+                data = _pipeline_cache[req.url]
+            else:
+                data = await asyncio.to_thread(run_pipeline, req.url)
+                _pipeline_cache[req.url] = data
         except Exception as e:
             yield f"data: {json.dumps({'type': 'error', 'detail': str(e)})}\n\n"
             return
