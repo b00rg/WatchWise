@@ -47,9 +47,9 @@ export default function Creator() {
         <>
           <div className="card">
             <div className="section-title">Channel Average</div>
-            <div style={{ fontSize: "2.5rem", fontWeight: 800, color: "#c084fc" }}>
+            <div style={{ fontSize: "2.5rem", fontWeight: 900, color: "#6248d4" }}>
               {result.average_brainrot_score}
-              <span style={{ fontSize: "1rem", color: "#9090b0", marginLeft: "0.5rem" }}>
+              <span style={{ fontSize: "1rem", color: "#a098cc", marginLeft: "0.5rem", fontWeight: 700 }}>
                 BrainRot score ({result.videos_sampled} videos sampled)
               </span>
             </div>
