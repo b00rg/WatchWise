@@ -63,6 +63,10 @@ def extract_video(url: str, out_dir: str) -> dict:
     if not thumbnail and meta.get("thumbnails"):
         thumbnail = meta["thumbnails"][-1].get("url", "")
 
+    thumbnail = meta.get("thumbnail", "")
+    if not thumbnail and meta.get("thumbnails"):
+        thumbnail = meta["thumbnails"][-1].get("url", "")
+
     return {
         "title": meta.get("title", ""),
         "description": meta.get("description", ""),

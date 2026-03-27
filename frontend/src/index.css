@@ -139,18 +139,26 @@ button:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
    PANEL OF JUDGES
    ════════════════════════════════════════════════════════ */
 
-.panel-of-judges { margin-bottom: 1.5rem; }
+.panel-of-judges {
+  margin-bottom: 2.5rem;
+  background: white;
+  border-radius: 24px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 12px 32px rgba(100, 70, 200, 0.05);
+  border: 2px solid #e8e2ff;
+}
 
-.panel-header { text-align: center; margin-bottom: 2rem; }
+.panel-header { text-align: center; margin-bottom: 2.5rem; }
 
 .panel-title {
-  font-size: 1.7rem; font-weight: 900;
+  font-size: 2.2rem; font-weight: 900;
   color: #3d3560; letter-spacing: -0.01em;
+  display: inline-flex; align-items: center; gap: 0.75rem;
 }
-.panel-title-stars { color: #ffc947; }
+.panel-title-stars { color: #ffc947; font-size: 1.5rem; }
 .panel-subtitle {
-  font-size: 0.75rem; font-weight: 800; text-transform: uppercase;
-  letter-spacing: 0.12em; color: #c0b8e0; margin-top: 0.3rem;
+  font-size: 0.85rem; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 0.15em; color: #a098cc; margin-top: 0.5rem;
 }
 
 /* ── 3 + 2 grid ──────────────────────────────────────── */

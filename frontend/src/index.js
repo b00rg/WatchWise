@@ -9,7 +9,7 @@ import "./index.css";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <nav className="nav">
-      <span className="logo">🧠 RotCheck</span>
+      <span className="logo">🧠 WatchWise</span>
       <NavLink to="/">Score Video</NavLink>
       <NavLink to="/history">Watch History</NavLink>
       <NavLink to="/creator">Creator Lookup</NavLink>

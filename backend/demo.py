@@ -163,7 +163,7 @@ async def run_demo():
     await _wait_for_server()
     print(f"{DIM}Server ready.{RESET}")
 
-    print(f"\n{BOLD}RotCheck Demo{RESET}  {DIM}[mode: concurrent HTTP]{RESET}")
+    print(f"\n{BOLD}WatchWise Demo{RESET}  {DIM}[mode: concurrent HTTP]{RESET}")
     print(f"{DIM}Video: {MOCK_CHANNEL} | Age: {MOCK_AGE} | Duration: {MOCK_SIGNALS['duration_sec']}s{RESET}")
     print(f"{DIM}Cuts/min: {MOCK_SIGNALS['cuts_per_min']} | Volume variance: {MOCK_SIGNALS['avg_volume_variance']}{RESET}\n")
     print("─" * 60)
