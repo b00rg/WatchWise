@@ -1,6 +1,8 @@
 import subprocess, tempfile, os, json
 import numpy as np
 import librosa
+from pipeline.ffmpeg import detect_scene_cuts
+
 
 def extract_video(url: str, out_dir: str) -> dict:
     """Download audio + extract transcript via yt-dlp. Returns paths + metadata."""
@@ -94,6 +96,16 @@ def run_pipeline(url: str) -> dict:
     with tempfile.TemporaryDirectory() as tmp:
         video_data = extract_video(url, tmp)
         audio_metrics = analyze_audio(video_data["audio_path"])
+        duration_sec = int(video_data.get("duration", 0))
+        # Use ffmpeg scene detection when available; fall back to audio-onset proxy
+        scene_cuts = detect_scene_cuts(
+            video_path=video_data.get("video_path"),  # None until video download is added
+            duration_sec=duration_sec,
+        )
+        if scene_cuts > 0:
+            audio_metrics["cuts_per_min"] = scene_cuts
+
     result = {**video_data, **audio_metrics, "audio_path": None}
-    result["duration_sec"] = int(result.pop("duration", 0))
+    result["duration_sec"] = duration_sec
+    result.pop("duration", None)
     return result
