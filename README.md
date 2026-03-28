@@ -1,4 +1,6 @@
-# WatchWise 🧠
+# WatchWise 
+<img width="1512" height="773" alt="Screenshot 2026-03-27 at 16 28 43" src="https://github.com/user-attachments/assets/eb000968-06b4-47c4-b5e8-bbe8539585e3" />
+<img width="1512" height="539" alt="Screenshot 2026-03-28 at 11 46 22" src="https://github.com/user-attachments/assets/3b71fcc7-e5d6-4d3c-af62-a33676fee2af" />
 
 Scores how overstimulating/brain-rotty YouTube content is for kids, grounded in neuroscience.
 
@@ -67,19 +69,11 @@ yt-dlp → video (ffmpeg: scene cuts → cuts_per_min)
        → audio (librosa: avg_volume_variance, volume_spike_frequency)
        → transcript (auto-subs) + metadata (title, channel, thumbnail, duration_sec)
             ↓
-<<<<<<< HEAD
    pacing_agent          — attentional demand (Fernando FSM model)
    sensory_agent         — audio environment vs clinical thresholds
    educational_agent     — content quality + language complexity
    manipulation_agent    — clickbait, parasocial language, fake urgency
    dopamine_agent        — variable reward schedule risk
-=======
-   behavioral_neuroscientist_agent (Claude) — dopamine cycling
-   child_dev_learning_agent (Claude) — educational deficits
-   child_consumer_psych_agent (Claude) — manipulation tactics
-   cognitive_load_researcher_agent (Claude) — pacing, cognitive load
-   sensory_integration_agent (Claude) — sensory overload
->>>>>>> 7aae7f9668c53b868625f9e90887c5d7e52dbdfe
             ↓
    judge_agent — synthesizes → BrainRot score (0–100) + verdict + radar + summary
 ```
