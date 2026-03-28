@@ -1,5 +1,6 @@
 # WatchWise 
-<img width="1512" height="773" alt="Screenshot 2026-03-27 at 16 28 43" src="https://github.com/user-attachments/assets/eb000968-06b4-47c4-b5e8-bbe8539585e3" />
+<img width="1512" height="705" alt="Screenshot 2026-03-28 at 11 47 44" src="https://github.com/user-attachments/assets/b474a086-cb9b-4973-bdca-89ec841271a6" />
+
 <img width="1512" height="539" alt="Screenshot 2026-03-28 at 11 46 22" src="https://github.com/user-attachments/assets/3b71fcc7-e5d6-4d3c-af62-a33676fee2af" />
 
 Scores how overstimulating/brain-rotty YouTube content is for kids, grounded in neuroscience.
